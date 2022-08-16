@@ -7,8 +7,8 @@ try:
 except Exception as e:
     print('Caught error while importing: {}'.format(e))
     
-IMAGE_PATH = './Face Mesh Detection Example/Photos/long.jpg'
-SAVE_DIR = './Face Mesh Detection Example/Geometric Art Save Image'
+IMAGE_PATH = '/Face Mesh Detection Example/Photos/long.jpg'
+SAVE_DIR = '/Face Mesh Detection Example/Geometric Art Save Image'
 
 def make_dir(directory):
     if not os.path.exists(directory):
@@ -189,9 +189,11 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     
-    images = get_face_detection(args.source_image)
+    current_path = os.getcwd()
     
-    make_dir(args.sav)
+    images = get_face_detection(current_path + args.source_image)
+    
+    make_dir(current_path + args.sav)
 
     for image in images:
-        get_face_mesh(image, args.model, args.sav)
+        get_face_mesh(image, current_path + args.model, current_path + args.sav)

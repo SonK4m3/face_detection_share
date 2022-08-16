@@ -7,9 +7,9 @@ try:
 except Exception as e:
     print('Caught error while importing: {}'.format(e))
 
-IMAGE_PATH = './Face Mesh Detection Example/Photos/DSC_6730.JPG'
-FLAG_PATH = './Face Mesh Detection Example/Photos/vietnam_flag.jpg'
-SAVE_DIR = './Face Mesh Detection Example/Stick Flag Save Image'
+IMAGE_PATH = '/Face Mesh Detection Example/Photos/DSC_6730.JPG'
+FLAG_PATH = '/Face Mesh Detection Example/Photos/vietnam_flag.jpg'
+SAVE_DIR = '/Face Mesh Detection Example/Stick Flag Save Image'
 
 def make_dir(directory):
     if not os.path.exists(directory):
@@ -172,7 +172,7 @@ def stick_flag_into_face(image, mask, flag, save_image):
     cv.imshow('final 2', result2)
     cv.imshow('final s', final_result)
 
-    cv.waitKey(0)
+    cv.waitKey(1000)
 
 def get_landmark_points(image, face_landmarks, mask):
     list_x, list_y = zip(*mask)
@@ -193,16 +193,18 @@ if __name__ == '__main__':
     parser.add_argument('--sav', help='save dir', default=SAVE_DIR, type=str)
     args = parser.parse_args()
     
-    face_detections = get_face_detection(args.source_image)
+    current_path = os.getcwd()
+    
+    face_detections = get_face_detection(current_path + args.source_image)
     #debug
     # print(face_detections)
     
-    make_dir(args.sav)
+    make_dir(current_path + args.sav)
     
     for num, face_detection in enumerate(face_detections):
         x, y, w, h = face_detection
         #debug
         # print("{} {} {} {}".format(x, y, w, h))
-        save_image = args.sav + '/' + get_name_image(args.source_image) + '/' + 'image_' + str(num)
+        save_image = current_path + args.sav + '/' + get_name_image(current_path + args.source_image) + '/' + 'image_' + str(num)
         make_dir(save_image)
-        get_face_mesh(args.source_image, x, y, w, h, args.flag, save_image)
+        get_face_mesh(current_path + args.source_image, x, y, w, h, current_path + args.flag, save_image)

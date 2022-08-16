@@ -7,8 +7,8 @@ try:
 except Exception as e:
     print('Caught error while importing: {}'.format(e))
     
-IMAGE_PATH = './Photos/DSC_6730.JPG'
-SAVE_DIR = './Line Face Save Image'
+IMAGE_PATH = '/Photos/DSC_6730.JPG'
+SAVE_DIR = '/Line Face Save Image'
 
 def make_dir(directory):
     if not os.path.exists(directory):
@@ -143,14 +143,16 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     face_detections = get_face_detection(args.source_image)
-    
-    make_dir(args.sav)
+
+    current_path = os.getcwd()
+
+    make_dir(current_path + args.sav)
     
     for num, face_detection in enumerate(face_detections):
         x, y, w, h = face_detection
         
-        save_image = args.sav + '/' + get_name_image(args.source_image) + '/' + 'image_' + str(num)
+        save_image = current_path + args.sav + '/' + get_name_image(args.source_image) + '/' + 'image_' + str(num)
         
         make_dir(save_image)
         
-        get_face_mesh(args.source_image, x - 50, y - 50, w + 100, h + 100, save_image)
+        get_face_mesh(current_path + args.source_image, x - 50, y - 50, w + 100, h + 100, save_image)

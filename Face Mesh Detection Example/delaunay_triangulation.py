@@ -7,8 +7,8 @@ try:
 except Exception as e:
     print('Caught error while importing: {}'.format(e))
 
-IMAGE = './Face Mesh Detection Example/Photos/man.jpg'
-SAVE_DIR = './Face Mesh Detection Example/Delaunay triangle'
+IMAGE = '/Face Mesh Detection Example/Photos/man.jpg'
+SAVE_DIR = '/Face Mesh Detection Example/Delaunay triangle'
 
 #face_mesh_model
 STATIC_IMAGE_MODE = True
@@ -111,4 +111,6 @@ if __name__ == '__main__':
     parser.add_argument('-src', '--source-image', help="face to swap", default=IMAGE, type=str)
     args = parser.parse_args()
     
-    delaunay_triangle(args.source_image, args.sav)
+    current_path = os.getcwd()
+    
+    delaunay_triangle(current_path + args.source_image, current_path + args.sav)

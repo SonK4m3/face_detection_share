@@ -7,9 +7,9 @@ try:
 except Exception as e:
     print('Caught error while importing: {}'.format(e))
     
-SAVE_DIR = './Face Mesh Detection Example/face_swapped'
-SRC_IMAGE = './Face Mesh Detection Example/Photos/long.jpg'
-DST_IMAGE = './Face Mesh Detection Example/Photos/man_2.jpg'
+SAVE_DIR = '/Face Mesh Detection Example/face_swapped'
+SRC_IMAGE = '/Face Mesh Detection Example/Photos/long.jpg'
+DST_IMAGE = '/Face Mesh Detection Example/Photos/man_2.jpg'
 
 def make_dir(directory):
     if not os.path.exists(directory):
@@ -175,6 +175,8 @@ if __name__ == '__main__':
     parser.add_argument('-dst', '--destination-image', help='background to swap', default=DST_IMAGE, type=str)
     args = parser.parse_args()
     
+    current_path = os.getcwd()
+    
     #process
-    face_swap(args.source_image, args.destination_image, args.sav)
+    face_swap(current_path + args.source_image, current_path + args.destination_image, current_path + args.sav)
     

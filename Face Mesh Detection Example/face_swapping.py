@@ -7,10 +7,10 @@ try:
 except Exception as e:
     print('Caught error while importing: {}'.format(e))
     
-SAVE_DIR = './Face Mesh Detection Example/face_swapped'
-SRC_IMAGE = './Face Mesh Detection Example/Photos/long.jpg'
-DST_IMAGE = './Face Mesh Detection Example/Photos/man_2.jpg'
-DAT_FILE = './Face Mesh Detection Example/shape_predictor_68_face_landmarks.dat'
+SAVE_DIR = '/Face Mesh Detection Example/face_swapped'
+SRC_IMAGE = '/Face Mesh Detection Example/Photos/long.jpg'
+DST_IMAGE = '/Face Mesh Detection Example/Photos/man_2.jpg'
+DAT_FILE = '/Face Mesh Detection Example/shape_predictor_68_face_landmarks.dat'
 
 def make_dir(directory):
     if not os.path.exists(directory):
@@ -190,12 +190,14 @@ if __name__ == '__main__':
     parser.add_argument('-dst', '--destination-image', help='background to swap', default=DST_IMAGE, type=str)
     args = parser.parse_args()
     
+    current_path = os.getcwd()
+    
     #take two image
     #source image
-    img1 = cv.imread(args.source_image)
+    img1 = cv.imread(current_path + args.source_image)
     #destination image
-    img2 = cv.imread(args.destination_image)
+    img2 = cv.imread(current_path + args.destination_image)
 
     #swapping face
-    FaceSwap(img1, img2, args.sav)
+    FaceSwap(img1, img2, current_path + args.sav)
  
