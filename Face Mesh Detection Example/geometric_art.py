@@ -68,9 +68,9 @@ def fill_triangle_max(image, blank, vertices):
 def fill_triangle_min(image, blank, vertices):
     p1, p2, p3 = vertices[:3]
     
-    b = (int(image[p1[0], p1[1]][0]) + int(image[p2[0], p2[1]][0]) + int(image[p3[0], p3[1]][0])) // 3
-    g = (int(image[p1[0], p1[1]][1]) + int(image[p2[0], p2[1]][1]) + int(image[p3[0], p3[1]][1])) // 3
-    r = (int(image[p1[0], p1[1]][2]) + int(image[p2[0], p2[1]][2]) + int(image[p3[0], p3[1]][2])) // 3
+    b = (int(image[p1[1], p1[0]][0]) + int(image[p2[1], p2[0]][0]) + int(image[p3[1], p3[0]][0])) // 3
+    g = (int(image[p1[1], p1[0]][1]) + int(image[p2[1], p2[0]][1]) + int(image[p3[1], p3[0]][1])) // 3
+    r = (int(image[p1[1], p1[0]][2]) + int(image[p2[1], p2[0]][2]) + int(image[p3[1], p3[0]][2])) // 3
     
     color = (int(b), int(g), int(r))
     tri = np.array([[p1, p2, p3]]).astype(int)
