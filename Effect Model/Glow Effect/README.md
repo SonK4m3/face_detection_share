@@ -11,6 +11,10 @@ The effect is created by drawing multiple strokes with each time getting bigger 
     - change background color 
     - draw shadow for contours
 
+## Example 
+
+![girl_and_flower](./Example%20Image/girl_and_flower.jpg)
+
 ## Requirements
 ```
 opencv
