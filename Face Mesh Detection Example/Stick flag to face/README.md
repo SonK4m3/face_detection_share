@@ -31,5 +31,8 @@ options:
 ```
 py stick_flag_to_face.py
 ```
+- default source image is `DSC_6730.JPG`
+- default flag image is `vietnam_flag.jpg`
+- default saved image dir is `Stick Flag Saved Image`
 - if you want to change arguments, you need to add selection to the instructions above 
 
