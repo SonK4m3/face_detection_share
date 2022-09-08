@@ -3,6 +3,10 @@
 ## Overview 
 This module will replace face by flag image or any photo if you want
 
+## Example
+
+![example image](./Example%20image/DSC_6730.JPG/image_1/result.jpg)
+
 ## Requirements
 ```
 OpenCV
