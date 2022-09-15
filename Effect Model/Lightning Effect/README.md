@@ -6,6 +6,7 @@ This effect is created by many lines connecting each other and drawing shadows
 ## Example
 ![single lightning](./Example%20Image/single_lightning15_51_31.png)
 ![lightning bolts](./Example%20Image/lightning_bolt_16_25_26.png)
+![bigger lightning](./Example%20Image/bigger_lightning_23_09_14.png)
 
 ## How to run it
 - default saved image directory is `Single Lightning Saved Image` will be make when you run code
