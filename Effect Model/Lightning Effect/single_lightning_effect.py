@@ -11,7 +11,6 @@ except Exception as e:
 _SAVE_DIR = 'Single Lightning Effect Saved Image'
 
 _HIGHTLIGHT_COLOR = (255,255,255) #white
-_MY_COLOR = (210, 170, 60)
 _SHADOW_COLOR_RED = (0,0,255) #red
 _SHADOW_COLOR_BLUE = (255,0,0) #blue
 _SHADOW_COLOR_GREEN = (0,255,0) #green
@@ -54,14 +53,17 @@ def draw_shadow(image, mask, color, size, shading_value, blending_value):
     for i in range(2, size, 1):
         pre = new_mask
         kernel = np.ones((i,i), np.uint8)
-        new_mask = cv.dilate(pre, kernel, iterations=1)
-        new_mask = cv.bitwise_xor(new_mask, pre)
+        new_mask_d = cv.dilate(pre, kernel, iterations=1)
+        new_mask_e = cv.erode(pre, kernel, iterations=1)
+
+        new_mask_d = cv.bitwise_xor(new_mask_d, pre)
+        new_mask_e = cv.bitwise_xor(new_mask_e, pre)
+        new_mask = cv.add(new_mask_d, new_mask_e)
 
         hl_image[:] = color
         sd_mask = cv.bitwise_and(hl_image, hl_image, mask=new_mask)
-            
         x = x * blending_value
-        result_x = cv.addWeighted(result_x, 1.0, sd_mask, x, 0.0)
+        result_x = cv.addWeighted(result_x, 1.0, sd_mask, x, 0.9)
 
     return result_x
 
@@ -69,14 +71,15 @@ def make_single_lightning_mask():
     blank = np.zeros(_DIMENSION[:2], np.uint8)
     start_point = (250,50)
     x, y = start_point[:2]
-    
     pre = start_point
+    thickness = 3
     while y < 500:
-        x = x + random.randint(-50, 50)
-        y = y + random.randint(20, 50)
+        x = x + random.randint(-30, 30)
+        y = y + random.randint(20, 40)
         point = (x, y)
-        cv.line(blank, pre, point, (255,255,255), 1)
+        cv.line(blank, pre, point, (255,255,255), thickness)
         pre = point
+        thickness = int(thickness * 0.9) if thickness > 1 else thickness
         
     return blank
 
@@ -84,7 +87,7 @@ def make_lightning_bolts_mask():
     blank = np.zeros(_DIMENSION[:2], np.uint8)
     
     cnt = random.randint(3, 5)
-    
+    thickness = 3
     while cnt > 0:
         start_point = (250,50)
         x, y = start_point[:2]
@@ -94,21 +97,59 @@ def make_lightning_bolts_mask():
             x = x + random.randint(-30, 30)
             y = y + random.randint(20, 30)
             point = (x, y)
-            cv.line(blank, pre, point, (255,255,255), 1)
+            cv.line(blank, pre, point, (255,255,255), thickness)
             pre = point
         
         cnt -= 1
         
     return blank
 
+def make_bigger_lightning(image):
+    blank = np.zeros(image.shape[:2], np.uint8)
+    
+    thickness = 1
+    start_point = (240, 50)
+    start_point_2 = (260,50)
+    x, y = start_point[:2]
+    x_2, y_2 = start_point_2[:2]    
+    pre = start_point
+    pre_2 = start_point_2
+    
+    cv.line(blank, start_point, start_point_2, (255,255,255), thickness)
+    while y < 500:
+        x_ran = random.randint(-40, 30)
+        y_ran = random.randint(35, 40)
+        x = x + x_ran + 1
+        y = y + y_ran
+        point = (x, y)
+        x_2 = x_2 + x_ran - 1
+        y_2 = y_2 + y_ran
+        point_2 = (x_2, y_2)
+        if(x > x_2):
+            break
+        cv.line(blank, pre, point, (255,255,255), thickness)
+        cv.line(blank, pre_2, point_2, (255,255,255), thickness)
+
+        pre = point
+        pre_2 = point_2
+    
+    blank_2 = np.zeros(image.shape[:2], np.uint8)
+    contours,_ = cv.findContours(blank, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    cv.drawContours(blank_2, contours, -1, (255,255,255), cv.FILLED, cv.LINE_AA)
+        
+    return blank_2
+
 def lightning_effect(save_dir, color):
-    blank = np.zeros(_DIMENSION, np.uint8)
-    mask = make_lightning_bolts_mask()
+    # blank = np.zeros(_DIMENSION, np.uint8)
+    blank = cv.imread('./Blending/Photos/men_in_cities.jpg')
+    # mask = make_lightning_bolts_mask()
+    # mask = make_single_lightning_mask()
+    mask = make_bigger_lightning(blank)
+    
+    blank = draw_shadow(blank, mask, _COLOR[color], 6, 0.9, 0.8)
 
-    blank = draw_shadow(blank, mask, _COLOR[color], 10, 0.75, 0.75)
-
-    save_image(save_dir, 'lightning_bolt', blank)
-
+    save_image(save_dir, 'bigger_lightning', blank)
+    
     cv.imshow('blank', blank)
     cv.waitKey(0)
 
