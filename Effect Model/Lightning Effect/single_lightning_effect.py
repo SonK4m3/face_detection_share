@@ -1,3 +1,6 @@
+import math
+
+
 try:
     import cv2 as cv
     import os
@@ -104,60 +107,85 @@ def make_lightning_bolts_mask():
         
     return blank
 
-def make_bigger_lightning(image):
-    blank = np.zeros(image.shape[:2], np.uint8)
+def make_bigger_lightning(dimension, start, end, thickness, bend=4):
+    blank = np.zeros(dimension, np.uint8)
     
-    thickness = 1
-    start_point = (240, 50)
-    start_point_2 = (260,50)
+    # from center started point to make 2 left right started point 
+    x_center,y_center = start[:2]
+    
+    start_point = (x_center - (thickness // 2), y_center)
+    start_point_2 = (x_center + (thickness // 2), y_center)
+    
     x, y = start_point[:2]
     x_2, y_2 = start_point_2[:2]    
+    
     pre = start_point
     pre_2 = start_point_2
     
-    cv.line(blank, start_point, start_point_2, (255,255,255), thickness)
-    while y < 500:
-        x_ran = random.randint(-40, 30)
-        y_ran = random.randint(35, 40)
-        x = x + x_ran + 1
-        y = y + y_ran
-        point = (x, y)
-        x_2 = x_2 + x_ran - 1
-        y_2 = y_2 + y_ran
-        point_2 = (x_2, y_2)
-        if(x > x_2):
-            break
-        cv.line(blank, pre, point, (255,255,255), thickness)
-        cv.line(blank, pre_2, point_2, (255,255,255), thickness)
-
-        pre = point
-        pre_2 = point_2
+    depth = get_first_divisor(thickness) // 2
     
-    blank_2 = np.zeros(image.shape[:2], np.uint8)
+    cv.line(blank, start_point, start_point_2, (255,255,255), 1)
+    while y < dimension[1]:
+        x_ran = random.randint(-(thickness//2 + bend * 10), thickness//2 + bend * 10)
+        y_ran = random.randint(dimension[1]//10 - 20, dimension[1]//10 - 10)
+        
+        # make next point with random position
+        # if point is out of image, we reverse sign
+        if x + x_ran + depth >= 0 and x_2+ x_ran + depth <= dimension[0]:
+            x = x + x_ran + depth 
+            x_2 = x_2 + x_ran - depth
+        else: 
+            x - x_ran + depth
+            x_2 - x_ran + depth
+        if(y + y_ran < dimension[1]):
+            y = y + y_ran 
+            y_2 = y_2 + y_ran 
+        
+        print("{} {}".format(x, y))
+        
+        if(x > x_2 and y < dimension[1]):
+            break
+        
+        cv.line(blank, pre, (x, y), (255,255,255), 1)
+        cv.line(blank, pre_2, (x_2, y_2), (255,255,255), 1)
+
+        pre = (x, y)
+        pre_2 = (x_2, y_2)
+    
+    blank_2 = np.zeros(dimension, np.uint8)
     contours,_ = cv.findContours(blank, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-    cv.drawContours(blank_2, contours, -1, (255,255,255), cv.FILLED, cv.LINE_AA)
+    cv.drawContours(blank_2, contours, -1, (255,255,255), cv.FILLED)
+    
+    # smooth line 
+    # blank_2 = cv.medianBlur(blank_2, 5)
         
     return blank_2
 
 def lightning_effect(save_dir, color):
-    # blank = np.zeros(_DIMENSION, np.uint8)
-    blank = cv.imread('./Blending/Photos/men_in_cities.jpg')
+    blank = np.zeros(_DIMENSION, np.uint8)
+    # blank = cv.imread('./Blending/Photos/men_in_cities.jpg')
     # mask = make_lightning_bolts_mask()
     # mask = make_single_lightning_mask()
-    mask = make_bigger_lightning(blank)
+    mask = make_bigger_lightning(blank.shape[:2], (450,50), (360, 490), 20)
     
-    blank = draw_shadow(blank, mask, _COLOR[color], 6, 0.9, 0.8)
+    blank = draw_shadow(blank, mask, _COLOR[color], 8, 0.7, 0.8)
 
     save_image(save_dir, 'bigger_lightning', blank)
     
     cv.imshow('blank', blank)
     cv.waitKey(0)
 
+def get_first_divisor(n):
+    if n < 2: return 1
+    for i in range(2, n):
+        if n % i == 0:
+            return i
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='single lightning')
     parser.add_argument('--sav', help='name of saved directory', default=_SAVE_DIR, type=str)
     parser.add_argument('--color', help="color of light", default=1,choices=[0,1,2], type=int)
-
+    
     args = parser.parse_args()
     save_dir = find_file(args.sav)
     
