@@ -4,6 +4,10 @@
 This effect is created by many lines connecting each other and drawing shadows
 
 In start end lightning: we make lightning random and rotate + transform fill to end point
+ 
+- find the coordinates of point C when transforming point B to the destination point
+![rotate](./rotate.jpg)
+---
 ## Example
 ![single lightning](./Example%20Image/single_lightning15_51_31.png)
 ![lightning bolts](./Example%20Image/single_lightning_effect_14_42_02.png)
