@@ -3,6 +3,7 @@
 ## Overview
 This effect is created by many lines connecting each other and drawing shadows
 
+In start end lightning: we make lightning random and rotate + transform fill to end point
 ## Example
 ![single lightning](./Example%20Image/single_lightning15_51_31.png)
 ![lightning bolts](./Example%20Image/single_lightning_effect_14_42_02.png)
